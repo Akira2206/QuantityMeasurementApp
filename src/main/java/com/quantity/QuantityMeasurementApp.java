@@ -2,33 +2,34 @@ package com.quantity;
 
 enum LengthUnit {
     FEET(12.0), INCHES(1.0), YARD(36.0), CM(0.393701);
-    public final double factor;
+    private final double factor;
     LengthUnit(double f) { this.factor = f; }
+
+    public double toBase(double value) { return value * factor; }
+    public double fromBase(double baseValue) { return baseValue / factor; }
 }
 
 class QuantityLength {
-    public final double value;
-    public final LengthUnit unit;
+    private final double value;
+    private final LengthUnit unit;
 
     public QuantityLength(double v, LengthUnit u) {
         this.value = v;
         this.unit = u;
     }
 
-    public static QuantityLength add(QuantityLength l1, QuantityLength l2, LengthUnit target) {
-        double sumInBase = (l1.value * l1.unit.factor) + (l2.value * l2.unit.factor);
-        return new QuantityLength(sumInBase / target.factor, target);
+    public double getBaseValue() { return unit.toBase(value); }
+
+    public static QuantityLength add(QuantityLength q1, QuantityLength q2, LengthUnit target) {
+        double sum = q1.getBaseValue() + q2.getBaseValue();
+        return new QuantityLength(target.fromBase(sum), target);
     }
 }
 
 public class QuantityMeasurementApp {
     public static void main(String[] args) {
-        System.out.println("--- UC7: Addition with Target Unit Specification ---");
-        
-        QuantityLength l1 = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength l2 = new QuantityLength(12.0, LengthUnit.INCHES);
-        
-        QuantityLength result = QuantityLength.add(l1, l2, LengthUnit.YARD);
-        System.out.println("Addition result (1 ft + 12 in) in Yards: " + result.value + " " + result.unit);
+        System.out.println("--- UC8: Refactored Unit Delegation ---");
+        QuantityLength q = new QuantityLength(1, LengthUnit.YARD);
+        System.out.println("1 Yard converted to base through Enum: " + q.getBaseValue());
     }
 }
