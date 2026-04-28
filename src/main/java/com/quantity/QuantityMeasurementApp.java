@@ -15,21 +15,20 @@ class QuantityLength {
         this.unit = u;
     }
 
-    public static QuantityLength add(QuantityLength l1, QuantityLength l2) {
+    public static QuantityLength add(QuantityLength l1, QuantityLength l2, LengthUnit target) {
         double sumInBase = (l1.value * l1.unit.factor) + (l2.value * l2.unit.factor);
-        double resultValue = sumInBase / l1.unit.factor;
-        return new QuantityLength(resultValue, l1.unit);
+        return new QuantityLength(sumInBase / target.factor, target);
     }
 }
 
 public class QuantityMeasurementApp {
     public static void main(String[] args) {
-        System.out.println("--- UC6: Addition of Two Length Units ---");
+        System.out.println("--- UC7: Addition with Target Unit Specification ---");
         
         QuantityLength l1 = new QuantityLength(1.0, LengthUnit.FEET);
         QuantityLength l2 = new QuantityLength(12.0, LengthUnit.INCHES);
         
-        QuantityLength result = QuantityLength.add(l1, l2);
-        System.out.println("Addition result (1 ft + 12 in): " + result.value + " " + result.unit);
+        QuantityLength result = QuantityLength.add(l1, l2, LengthUnit.YARD);
+        System.out.println("Addition result (1 ft + 12 in) in Yards: " + result.value + " " + result.unit);
     }
 }
